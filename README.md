@@ -26,6 +26,8 @@ The public repository currently includes:
 
 The large generated recompilation source derived from the commercial executable is intentionally **not** committed.
 
+The public reproduction path now includes an automatic **ReXGlue v0.10.0 bctr/CTR codegen fix** plus a post-codegen audit, so users do not need to hand-edit hundreds of generated files.
+
 ## Repository layout
 
 ```text
@@ -112,7 +114,9 @@ The development series included fixes for routines such as:
 - `sub_822BA690`
 - `sub_822C6420`
 
-See [docs/COMPATIBILITY_FIXES.md](docs/COMPATIBILITY_FIXES.md) for the technical history.
+The original development build reached 257 project-specific overrides. The public reproduction method now fixes the generator itself so those same bad dispatchers are not emitted.
+
+See [docs/AUTOMATIC_BCTR_FIX.md](docs/AUTOMATIC_BCTR_FIX.md) for the automatic workflow and the compatibility notes under `recomp/` for the historical development path.
 
 ## Performance note
 
