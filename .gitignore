@@ -1,0 +1,66 @@
+# Original / extracted game data
+extracted/*
+!extracted/.gitkeep
+
+*.xex
+*.xexp
+*.iso
+*.xiso
+*.zar
+*.arc
+
+# Common Xbox/container/disc dumps
+*.000
+*.360
+*.bin
+*.cue
+*.img
+*.mdf
+*.mds
+
+# Generated recompilation/build output
+out/
+build/
+generated/
+codegen/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+compile_commands.json
+
+# Runtime / diagnostics
+logs/
+*.log
+*.dmp
+*.mdmp
+
+# Local configuration / caches
+*.user
+*.suo
+.vs/
+.vscode/
+.idea/
+
+# Temporary files / archives / backups
+*.tmp
+*.temp
+*.bak
+*.old
+*.zip
+*.7z
+*.rar
+_backups/
+backup/
+backups/
+
+# Executables generated locally
+jojohd.exe
+
+# Windows metadata
+Thumbs.db
+Desktop.ini
+
+# Keep placeholders
+!launcher/.gitkeep
+!scripts/.gitkeep
+!src/.gitkeep
