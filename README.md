@@ -53,6 +53,30 @@ jojo-hd-recompiled/
 └─ README.md
 ```
 
+## One-click Windows build
+
+For the normal Windows workflow, after placing files from your own copy of the game in `extracted/`, simply run:
+
+```text
+BUILD_JOJO.bat
+```
+
+The build script performs the complete v1.0 Beta pipeline:
+
+1. validates `extracted/default.xex`;
+2. checks Git, CMake, Ninja, LLVM/Clang and MinGW-w64;
+3. clones the pinned official ReXGlue source into `tools/rexglue-sdk` when needed;
+4. applies/verifies the project bctr -> CTR generator fix with backup;
+5. builds the ReXGlue tool;
+6. generates JoJo C++ locally from the user's own XEX;
+7. audits generated bctr dispatchers;
+8. builds `jojohd.exe`;
+9. builds the launcher and helper;
+10. validates important outputs by SHA-256;
+11. creates `dist/JoJo HD Recompiled v1.0 Beta/`.
+
+The `tools/rexglue-sdk/`, `generated/`, `out/`, `dist/` and extracted game data remain local and are ignored by Git.
+
 ## Preparing your local copy
 
 Clone or download the repository and place files extracted from **your own copy** of the game in:
