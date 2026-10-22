@@ -78,3 +78,6 @@ JoJo HD Helper.exe
 
 # Portable distribution output
 dist/
+
+# ReXGlue source downloaded automatically by BUILD_JOJO.bat
+tools/rexglue-sdk/
