@@ -77,7 +77,33 @@ Expected build directory:
 out/build/win-amd64-release/
 ```
 
-Project-specific indirect-branch fixes are documented under `recomp/`.
+Before generating JoJo source, apply the project bctr/CTR fix to a ReXGlue v0.10.0 source checkout:
+
+```text
+scripts\APLICAR_PATCH_REXGLUE.bat "C:\path\to\rexglue-sdk"
+```
+
+Rebuild that patched ReXGlue, regenerate the game code, then audit the generated C++:
+
+```text
+scripts\AUDITAR_BCTR_GERADO.bat "C:\path\to\generated"
+```
+
+A clean audit returns exit code 0.
+
+Technical details are documented in:
+
+```text
+docs/AUTOMATIC_BCTR_FIX.md
+```
+
+The raw reference patch is:
+
+```text
+patches/rexglue-v0.10.0-bctr-ctr.patch
+```
+
+The historical 257 per-function overrides are no longer the preferred public reproduction method; the generator-level fix addresses the same failure class before code is emitted.
 
 ## Create a portable local folder
 
