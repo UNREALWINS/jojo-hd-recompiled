@@ -116,6 +116,8 @@ JoJo HD Launcher.exe
 JoJo HD Helper.exe
 ```
 
+The launcher build is forced to **x64** and statically links the MinGW runtime. The build script also checks the resulting imports and rejects executables that still depend on `libwinpthread-1.dll`, `libstdc++-6.dll` or `libgcc_s_*.dll`.
+
 The normal tested runtime arguments include:
 
 ```text
