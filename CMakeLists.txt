@@ -1,23 +1,23 @@
-# jojo - ReXGlue Recompiled Project
+# jojohd - ReXGlue Recompiled Project
 #
 # SDK boilerplate lives in generated/rexglue.cmake.
 
 cmake_minimum_required(VERSION 3.25)
-project(jojo LANGUAGES CXX)
+project(jojohd LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include(generated/rexglue.cmake)
 
-set(JOJO_SOURCES
+set(JOJOHD_SOURCES
     src/main.cpp
 )
 
 if(WIN32)
-    add_executable(jojo WIN32 ${JOJO_SOURCES})
+    add_executable(jojohd WIN32 ${JOJOHD_SOURCES})
 else()
-    add_executable(jojo ${JOJO_SOURCES})
+    add_executable(jojohd ${JOJOHD_SOURCES})
 endif()
 
-rexglue_setup_target(jojo GPU_PLUGINS xenos)
+rexglue_setup_target(jojohd GPU_PLUGINS xenos)
