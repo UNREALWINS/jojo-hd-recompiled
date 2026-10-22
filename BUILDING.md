@@ -1,5 +1,16 @@
 # Building on Windows
 
+## One-click build
+
+After the prerequisites are installed and your own extracted game files are in `extracted/`, run:
+
+```text
+BUILD_JOJO.bat
+```
+
+The root build script executes the ReXGlue patch, tool build, codegen, audit, game build, launcher/helper build, hash validation and portable-folder assembly automatically.
+
+
 ## Requirements
 
 - Windows 10 or Windows 11 x64
