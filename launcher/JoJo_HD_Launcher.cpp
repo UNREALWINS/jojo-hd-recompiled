@@ -237,7 +237,7 @@ static bool Launch(bool diagnostic) {
     std::wstring game=FindGameExe(), data=FindGameData();
     if (game.empty() || data.empty()) { VerifyFiles(gMain); return false; }
 
-    std::wstring cmd = Quote(game) + L" --game_data_root " + Quote(data) + L" --gpu_plugin xenos --license_mask=1";
+    std::wstring cmd = Quote(game) + L" --game_data_root " + Quote(data) + L" --gpu_plugin xenos";
     if (!gSettings.resolution.empty()) cmd += L" --resolution " + gSettings.resolution;
     cmd += gSettings.fullscreen ? L" --fullscreen" : L" --no-fullscreen";
     if (!gSettings.vsync) cmd += L" --d3d12_allow_variable_refresh_rate_and_tearing";
@@ -294,7 +294,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp){
         if(PtIn(gVsyncRect,x,y)){gSettings.vsync=!gSettings.vsync;SaveSettings();InvalidateRect(hwnd,nullptr,FALSE);return 0;}
         if(PtIn(gSavesRect,x,y)){OpenFolder(SavesDir());return 0;}
         if(PtIn(gLogsRect,x,y)){OpenFolder(LogsDir());return 0;}
-        if(PtIn(gAdvancedRect,x,y)){MessageBoxW(hwnd,L"Opcoes avancadas\n\nGPU: xenos (recomendado)\nF12: gerenciado pelo JoJo HD Helper\nCursor: ocultado automaticamente durante o jogo\nLicense mask: 1",L"Opcoes avancadas",MB_ICONINFORMATION|MB_OK);return 0;}
+        if(PtIn(gAdvancedRect,x,y)){MessageBoxW(hwnd,L"Opcoes avancadas\n\nGPU: xenos (recomendado)\nF12: gerenciado pelo JoJo HD Helper\nCursor: ocultado automaticamente durante o jogo",L"Opcoes avancadas",MB_ICONINFORMATION|MB_OK);return 0;}
         if(PtIn(gCreditsRect,x,y)){MessageBoxW(hwnd,L"JoJo's Bizarre Adventure HD Ver.\nRecompiled Edition - v1.0 Beta\n\nLauncher criado para a build recompilada com ReXGlue.",L"Creditos",MB_ICONINFORMATION|MB_OK);return 0;}
         if(PtIn(gVerifyRect,x,y)){VerifyFiles(hwnd);return 0;}
         if(PtIn(gPlayRect,x,y)){Launch(false);return 0;}
