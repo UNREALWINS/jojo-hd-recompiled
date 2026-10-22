@@ -3,6 +3,15 @@ Set-Location $PSScriptRoot
 
 $gpp = (Get-Command g++.exe -ErrorAction Stop).Source
 $windres = (Get-Command windres.exe -ErrorAction Stop).Source
+$objdumpCmd = Get-Command objdump.exe -ErrorAction SilentlyContinue
+
+$target = (& $gpp -dumpmachine).Trim()
+if ($target -notmatch '^x86_64-') {
+    throw "Este launcher precisa ser compilado em 64 bits. g++ atual: $target"
+}
+
+Write-Host "Compilador: $gpp"
+Write-Host "Target:     $target" -ForegroundColor Green
 
 $bg = Join-Path $PSScriptRoot 'launcher_bg.png'
 $icon = Join-Path $PSScriptRoot 'jojo_launcher.ico'
@@ -89,6 +98,7 @@ if ($LASTEXITCODE -ne 0) {
 $launcherArgs = @(
     '-std=c++23','-O2','-s','-DUNICODE','-D_UNICODE','-municode','-mwindows',
     'JoJo_HD_Launcher.cpp',$res,'-o','JoJo HD Launcher.exe',
+    '-static',
     '-lgdiplus','-lgdi32','-luser32','-lshell32','-lole32','-luuid',
     '-static-libgcc','-static-libstdc++'
 )
@@ -100,6 +110,7 @@ if ($LASTEXITCODE -ne 0) {
 $helperArgs = @(
     '-std=c++23','-O2','-s','-DUNICODE','-D_UNICODE','-municode','-mwindows',
     'JoJo_HD_Helper.cpp','-o','JoJo HD Helper.exe',
+    '-static',
     '-lgdi32','-luser32','-static-libgcc','-static-libstdc++'
 )
 & $gpp @helperArgs
@@ -110,6 +121,37 @@ if ($LASTEXITCODE -ne 0) {
 Remove-Item -LiteralPath $rc,$res -Force -ErrorAction SilentlyContinue
 if ($generatedBg) {
     Remove-Item -LiteralPath $bg -Force -ErrorAction SilentlyContinue
+}
+
+$runtimePatterns = @(
+    'libwinpthread-1.dll',
+    'libstdc++-6.dll',
+    'libgcc_s_*.dll'
+)
+
+if ($objdumpCmd) {
+    foreach ($exe in @('JoJo HD Launcher.exe','JoJo HD Helper.exe')) {
+        $imports = (& $objdumpCmd.Source -p $exe | Out-String)
+        foreach ($pattern in $runtimePatterns) {
+            $regex = '^' + [regex]::Escape($pattern).Replace('\*','.*') + '
+Get-Item 'JoJo HD Launcher.exe','JoJo HD Helper.exe' | Select-Object Name,Length,LastWriteTime
+Write-Host ''
+Write-Host 'Custom launcher_bg.png / jojo_launcher.ico are optional local assets and are not required by the repository.'
+
+            $dlls = [regex]::Matches($imports, 'DLL Name:\s*([^\r\n]+)') |
+                ForEach-Object { $_.Groups[1].Value.Trim() }
+
+            if ($dlls | Where-Object { $_ -match $regex }) {
+                throw "$exe ainda depende de runtime externo do MinGW: $pattern"
+            }
+        }
+    }
+
+    Write-Host ''
+    Write-Host 'Verificacao OK: nenhum runtime externo do MinGW detectado.' -ForegroundColor Green
+} else {
+    Write-Host ''
+    Write-Host 'Aviso: objdump.exe nao foi encontrado; verificacao de imports ignorada.' -ForegroundColor Yellow
 }
 
 Write-Host ''
