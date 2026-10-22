@@ -2,7 +2,7 @@
 
 Unofficial native Windows recompilation project for **JoJo's Bizarre Adventure HD Ver.**
 
-> **Current release target:** v1.0 Beta
+> **Current milestone:** v1.0 Beta
 
 ## Important
 
@@ -10,76 +10,127 @@ This repository **does not contain the original game**, extracted game data, Xbo
 
 You must provide files from your own legally acquired copy of the game.
 
-## Project goals
+## v1.0 Beta status
 
-- Run the game natively on Windows through recompilation.
-- Provide a simple launcher for resolution and fullscreen options.
-- Keep the project portable.
-- Preserve the original game experience while fixing recompilation-specific crashes and compatibility issues.
-- Make the recompilation process reproducible without distributing the original game data.
+The internal v1.0 Beta build reached full-game testing without the previous illegal-instruction crashes.
 
-## What belongs in this repository
+The public repository currently includes:
 
-- Launcher source code.
-- Helper source code.
-- Recompilation manifests and configuration.
-- Project-specific dispatcher/override fixes.
-- Build and verification scripts.
-- Documentation.
+- portable Windows launcher source;
+- game-session helper source;
+- MinGW launcher/helper build scripts;
+- local game-data verification scripts;
+- documentation of the verified recompilation compatibility fixes;
+- a machine-readable compatibility-fix catalog;
+- defensive Git ignore rules that block common game dumps and extracted data.
 
-## What does NOT belong in this repository
+The large generated recompilation source derived from the commercial executable is intentionally **not** committed.
 
-Do **not** upload:
+## Repository layout
 
-- `default.xex`
-- extracted game files
-- Xbox 360 package contents
-- ISO/disc images
-- original textures, audio, movies, fonts or other game assets
-- generated binaries containing material that cannot legally be redistributed
+```text
+jojo-hd-recompiled/
+├─ docs/
+│  ├─ BUILDING.md
+│  └─ COMPATIBILITY_FIXES.md
+├─ extracted/
+│  └─ .gitkeep
+├─ launcher/
+│  ├─ JoJo_HD_Launcher.cpp
+│  ├─ JoJo_HD_Helper.cpp
+│  ├─ BUILD_LAUNCHER.ps1
+│  └─ COMPILAR_LAUNCHER.bat
+├─ scripts/
+│  ├─ PREPARAR_JOGO.ps1
+│  └─ PREPARAR_JOGO.bat
+├─ src/
+│  ├─ README.md
+│  └─ compatibility_fixes.toml
+├─ CONTRIBUTING.md
+├─ DISCLAIMER.md
+└─ README.md
+```
 
-The repository includes a defensive `.gitignore` to reduce the risk of accidentally committing these files.
+## Preparing your local copy
 
-## Expected local layout
-
-After obtaining the project, place the files extracted from your own copy of the game inside:
+Clone or download the repository and place files extracted from **your own copy** of the game in:
 
 ```text
 extracted/
 ```
 
-The expected local project layout will look approximately like:
+The verification script expects at least:
 
 ```text
-jojo-hd-recompiled/
-├─ extracted/              # supplied locally by the user; not tracked by Git
-├─ launcher/
-├─ scripts/
-├─ src/
-├─ README.md
-├─ DISCLAIMER.md
-└─ .gitignore
+extracted/default.xex
 ```
 
-Additional build instructions and the exact required files will be documented as the public package is finalized.
+Run:
+
+```text
+scripts\PREPARAR_JOGO.bat
+```
+
+The script only checks local files. It does not download or upload game data.
+
+## Launcher
+
+The public launcher is built from source in `launcher/`.
+
+Run:
+
+```text
+launcher\COMPILAR_LAUNCHER.bat
+```
+
+It builds:
+
+```text
+JoJo HD Launcher.exe
+JoJo HD Helper.exe
+```
+
+The normal tested runtime arguments include:
+
+```text
+--game_data_root "<project>\extracted" --gpu_plugin xenos --license_mask=1
+```
+
+The launcher passes the selected resolution/fullscreen state and closes after starting the game.
+
+The helper remains active only for the game session and handles F12 exit confirmation/cursor behavior.
+
+## Compatibility work
+
+The v1.0 Beta stability work focused on generated PowerPC `bctr` dispatch cases where the generated host dispatcher could select the destination using a general-purpose register instead of the emulated `CTR`.
+
+The development series included fixes for routines such as:
+
+- `sub_8212B868`
+- `sub_82121D20`
+- `sub_821704D0`
+- `sub_822BA690`
+- `sub_822C6420`
+
+See [docs/COMPATIBILITY_FIXES.md](docs/COMPATIBILITY_FIXES.md) for the technical history.
+
+## Performance note
+
+Heavy trace logging caused small in-fight stalls during development.
+
+Normal gameplay should not use trace logging. Diagnostic mode exists specifically for troubleshooting.
+
+## Public artwork policy
+
+The public repository does not include the themed JoJo background/logo artwork from the local/private launcher build.
+
+This avoids using the repository as a distribution channel for third-party artwork. The public launcher source works without those assets.
 
 ## ReXGlue
 
 This project uses **ReXGlue** as the recompilation framework/runtime.
 
 ReXGlue is a separate project and is not maintained by this repository.
-
-## Status
-
-The current internal build has reached the first stable **v1.0 Beta** candidate used for full gameplay testing.
-
-Known project work includes:
-
-- fixes for generated indirect branch/jump-table dispatch cases;
-- project-specific runtime overrides;
-- launcher with resolution/fullscreen selection;
-- an auxiliary helper for game-session behavior;
-- portable relative-path launching.
 
 ## Legal notice
 
@@ -91,16 +142,16 @@ This project is not affiliated with, sponsored by, approved by, or endorsed by t
 
 See [DISCLAIMER.md](DISCLAIMER.md).
 
-## Contributions
+## Reporting bugs
 
-Please do not submit copyrighted game data in issues, pull requests, releases, attachments, or test packages.
+Please provide:
 
-When reporting a bug, prefer:
-
-- logs;
-- crash addresses;
-- function names/addresses;
 - reproduction steps;
-- hashes of files where appropriate;
+- Windows version;
+- GPU;
+- crash address/function when available;
+- diagnostic logs when useful.
 
-instead of uploading copyrighted game files.
+Do **not** upload `default.xex`, ISOs, extracted game data or copyrighted game assets.
+
+See [CONTRIBUTING.md](CONTRIBUTING.md).
