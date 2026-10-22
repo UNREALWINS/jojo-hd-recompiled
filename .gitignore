@@ -64,3 +64,17 @@ Desktop.ini
 !launcher/.gitkeep
 !scripts/.gitkeep
 !src/.gitkeep
+
+# Local launcher artwork/resources (optional, intentionally not distributed)
+launcher/launcher_bg.png
+launcher/jojo_launcher.ico
+launcher/*.rc
+launcher/*_res.o
+
+# Locally compiled launcher/helper
+launcher/*.exe
+JoJo HD Launcher.exe
+JoJo HD Helper.exe
+
+# Portable distribution output
+dist/
