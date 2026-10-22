@@ -237,7 +237,7 @@ static bool Launch(bool diagnostic) {
     std::wstring game=FindGameExe(), data=FindGameData();
     if (game.empty() || data.empty()) { VerifyFiles(gMain); return false; }
 
-    std::wstring cmd = Quote(game) + L" --game_data_root " + Quote(data) + L" --gpu_plugin xenos";
+    std::wstring cmd = Quote(game) + L" --game_data_root " + Quote(data) + L" --gpu_plugin xenos --license_mask=1";
     if (!gSettings.resolution.empty()) cmd += L" --resolution " + gSettings.resolution;
     cmd += gSettings.fullscreen ? L" --fullscreen" : L" --no-fullscreen";
     if (!gSettings.vsync) cmd += L" --d3d12_allow_variable_refresh_rate_and_tearing";
