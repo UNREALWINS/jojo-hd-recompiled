@@ -24,9 +24,9 @@ if ($AlreadyPatched) {
     exit 0
 }
 
-$ExpectedSwitch = 'ctx.println("\tswitch ({}.u32) {{", ctx.r(jt->indexRegister));'
+$ExpectedSwitch = '    ctx.println("\tswitch ({}.u32) {{", ctx.r(jt->indexRegister));'
 $ExpectedCase   = 'ctx.println("\tcase {}:", i);'
-$ExpectedTrap   = 'ctx.println("\t\t__builtin_trap(); // Switch case out of range");'
+$ExpectedTrap   = '    ctx.println("\t\t__builtin_trap(); // Switch case out of range");'
 
 foreach ($Needle in @($ExpectedSwitch, $ExpectedCase, $ExpectedTrap)) {
     if (-not $Original.Contains($Needle)) {
