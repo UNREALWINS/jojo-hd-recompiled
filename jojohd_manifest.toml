@@ -1,0 +1,12 @@
+# JoJo HD Recompiled public manifest.
+# Original game data is supplied locally by the user and is never distributed.
+
+[project]
+name = "jojohd"
+sdk_version = "0.10.0"
+game_root = "extracted"
+
+[entrypoint]
+file_path = "extracted/default.xex"
+out_directory_path = "generated/default"
+includes = []
