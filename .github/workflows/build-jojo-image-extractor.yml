@@ -1,0 +1,100 @@
+name: Build JoJo image extractor
+
+on:
+  push:
+    paths:
+      - ".github/workflows/build-jojo-image-extractor.yml"
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+
+      - name: Prepare sources
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force src | Out-Null
+          $b64='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'
+          [IO.File]::WriteAllBytes('src\jojo.cpp.gz',[Convert]::FromBase64String($b64))
+          tar -xzf src\jojo.cpp.gz -C src
+          Move-Item src\jojo_img_extract.cpp src\jojo_img_extract.cpp -ErrorAction SilentlyContinue
+          Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/Laupetin/OpenAssetTools/main/thirdparty/lzx/lzx.c' -OutFile 'src\lzx.c'
+          Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/Laupetin/OpenAssetTools/main/thirdparty/lzx/lzx.h' -OutFile 'src\lzx.h'
+          Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/nothings/stb/master/stb_image_write.h' -OutFile 'src\stb_image_write.h'
+
+      - name: Compile standalone x64
+        shell: pwsh
+        run: |
+          Push-Location src
+          cl /nologo /c /O2 /MT /EHsc /std:c++20 /D_CRT_SECURE_NO_WARNINGS jojo_img_extract.cpp
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          cl /nologo /c /O2 /MT /TC /D_CRT_SECURE_NO_WARNINGS lzx.c
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          link /nologo jojo_img_extract.obj lzx.obj /OUT:EXTRAIR_IMAGENS_JOJO.exe /SUBSYSTEM:CONSOLE
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          dumpbin /headers EXTRAIR_IMAGENS_JOJO.exe | Out-File -Encoding ascii headers.txt
+          dumpbin /dependents EXTRAIR_IMAGENS_JOJO.exe | Out-File -Encoding ascii dependents.txt
+          $deps=Get-Content -Raw dependents.txt
+          if ($deps -match 'VCRUNTIME|MSVCP|libwinpthread|libstdc\+\+|libgcc') { throw 'Runtime externo inesperado.' }
+          @'
+@echo off
+setlocal
+cd /d "%~dp0"
+set "ROOT=%~1"
+if not defined ROOT set "ROOT=%CD%"
+if not exist "%ROOT%" (
+  echo Pasta nao encontrada: "%ROOT%"
+  pause
+  exit /b 2
+)
+"%~dp0EXTRAIR_IMAGENS_JOJO.exe" "%ROOT%"
+set "RC=%ERRORLEVEL%"
+echo.
+if "%RC%"=="0" (echo Extracao concluida.) else (echo Extracao terminou com codigo %RC%.)
+pause
+exit /b %RC%
+'@ | Set-Content -Encoding ASCII EXTRAIR_IMAGENS_JOJO.bat
+          @'
+JoJo HD - Extrator de Imagens Xbox 360
+
+USO RAPIDO
+1. Copie EXTRAIR_IMAGENS_JOJO.exe e EXTRAIR_IMAGENS_JOJO.bat para qualquer pasta.
+2. Arraste a pasta "extracted" sobre EXTRAIR_IMAGENS_JOJO.bat
+   OU execute:
+   EXTRAIR_IMAGENS_JOJO.bat "D:\caminho\para\extracted"
+
+Saida:
+  extracted\JOJO_IMAGENS_EXTRAIDAS\
+
+O extrator processa:
+- ARC v17 big-endian do MT Framework;
+- XMem/LZX dos ARC de Xbox 360;
+- TEX Xenos tiled;
+- DXT1, DXT3 e DXT5;
+- conversao para PNG.
+
+Arquivos TEX ainda nao suportados sao preservados em _TEX_NAO_CONVERTIDOS.
+
+O pacote inclui o codigo-fonte usado para compilar.
+lzx.c/lzx.h: codigo GPL derivado de Wine/cabextract, obtido de OpenAssetTools.
+stb_image_write.h: stb, public domain/MIT.
+'@ | Set-Content -Encoding UTF8 LEIA-ME.txt
+          Pop-Location
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: JoJo-HD-Extrator-Imagens-x64
+          path: |
+            src/EXTRAIR_IMAGENS_JOJO.exe
+            src/EXTRAIR_IMAGENS_JOJO.bat
+            src/LEIA-ME.txt
+            src/jojo_img_extract.cpp
+            src/lzx.c
+            src/lzx.h
+            src/stb_image_write.h
+            src/dependents.txt
+            src/headers.txt
+          if-no-files-found: error
