@@ -32,47 +32,14 @@ jobs:
           $pgz.CopyTo($pout)
           $pout.Dispose(); $pgz.Dispose(); $pin.Dispose()
           git -C src apply final.patch
-          $src = Get-Content -Raw 'src\jojo_img_extract.cpp'
-          $src = $src.Replace('enum Kind{K_DXT1,K_DXT3,K_DXT5,K_BGRA8} kind;', 'enum Kind{K_DXT1,K_DXT3,K_DXT5,K_BGRA8,K_A8} kind;')
-          $src = $src.Replace('if(fmt==0x13||fmt==0x14){pitch=8;kind=K_DXT1;elemW=(width+3)/4;elemH=(height+3)/4;}', "if(fmt==0x12){pitch=1;kind=K_A8;elemW=width;elemH=height;}`r`n    else if(fmt==0x13||fmt==0x14){pitch=8;kind=K_DXT1;elemW=(width+3)/4;elemH=(height+3)/4;}")
-          $old = @'
-    if(kind==K_BGRA8){
-        rgba.resize(size_t(width)*height*4);
-        for(size_t i=0;i<size_t(width)*height;++i){
-            const uint8_t* q=&linear[i*4];
-            uint8_t* d=&rgba[i*4];
-            // Xbox 360 16-bit endian swap followed by BGRA -> RGBA.
-            d[0]=q[3]; d[1]=q[0]; d[2]=q[1]; d[3]=q[2];
-        }
-        ok=true;
-    } else {
-'@
-          $new = @'
-    if(kind==K_BGRA8){
-        rgba.resize(size_t(width)*height*4);
-        for(size_t i=0;i<size_t(width)*height;++i){
-            const uint8_t* q=&linear[i*4];
-            uint8_t* d=&rgba[i*4];
-            // Xbox 360 16-bit endian swap followed by BGRA -> RGBA.
-            d[0]=q[3]; d[1]=q[0]; d[2]=q[1]; d[3]=q[2];
-        }
-        ok=true;
-    } else if(kind==K_A8){
-        rgba.resize(size_t(width)*height*4);
-        uint8_t maxv=0;
-        for(size_t i=0;i<size_t(width)*height;++i) if(linear[i]>maxv) maxv=linear[i];
-        const bool fourBitRange = maxv <= 15;
-        for(size_t i=0;i<size_t(width)*height;++i){
-            uint8_t v = fourBitRange ? uint8_t(linear[i]*17) : linear[i];
-            uint8_t* d=&rgba[i*4];
-            d[0]=v; d[1]=v; d[2]=v; d[3]=255;
-        }
-        ok=true;
-    } else {
-'@
-          if (-not $src.Contains($old)) { throw 'Decode block not found for v1.1 patch.' }
-          $src = $src.Replace($old,$new)
-          Set-Content -Encoding UTF8 'src\jojo_img_extract.cpp' $src
+          $v11='H4sIAJJE3WoC/7WUS2/aQBDH73yKUQ4Vxhj8BFqzFGilVMqhEqrUSAghG69hE2NTswanwHfv7vpJi3JI1D14/t7Hb8YzO1YUBZzuU/QULcl2vcQpjZ0V7ax2u4Ysy+DeXhqPQdFVo/0RZG40FcbjBvBB/KbnUOe77w+1HpzPkL+NEMVpZ09+46YkwamYRlpPNpNWQkJq6Eva3JLdlygJqWTD5W/gFeJ03LygO9fxYEdSHEDk+3tM7+wY0yQOwXeCPbYZoqEISEjZPrraINUGHCZbeCChd3pYfn38obWFMTJjMTO9n00GF3hmW+yG/MbzzFYQKCA4wNufSG0L8Y3R8vj8pr+lCKmpZpzPhTSlU+Z0YHMMytzZGaN5JB7dyIbUNe0M1txgst7QbOqSB16B9YKmFbTJIGcJVE7JIMV5zNL4X6KDW3SrDLFXYxrvYvariAel1CeVnN50ar3Hqd4vmGaBFHfitXSLltLNdo+1lG61tX7ZUsXgTTJY0hZ46EO8dp05aZkL+3pPtwuPbpSC0VNB6ykuYVcu9IgTwv7o7MCPgiA6Yg/cF+ARgTKC2f100rmmeHN1gX7NjYXNpMalKqTOpSakwaW+yPuDj0slo2dE4wTni5cyPSIX4uJJp2o3/5ZOjEVj8wf7DYgMSa0sOS1TqrnJswBbJz3w/ikX/CjOjwNhC2R4i2XLMpF4KAEJsRPPyWLEQVKGKydr2FUU7im4URQwD0k8JXTmhGsMSByBIQLNelMUtQzUv+vAyFeOPhdLVcwtrS/BJ7gV7isXRf6nxIe8voe8uIe8srpl1e7VpZJlYaFW2FPjD//6Wd5FBgAA'
+          [IO.File]::WriteAllBytes('src\v11.patch.gz',[Convert]::FromBase64String($v11))
+          $vin=[IO.File]::OpenRead('src\v11.patch.gz')
+          $vgz=New-Object IO.Compression.GZipStream($vin,[IO.Compression.CompressionMode]::Decompress)
+          $vout=[IO.File]::Create('src\v11.patch')
+          $vgz.CopyTo($vout)
+          $vout.Dispose(); $vgz.Dispose(); $vin.Dispose()
+          git -C src apply v11.patch
           Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/Laupetin/OpenAssetTools/main/thirdparty/lzx/lzx.c' -OutFile 'src\lzx.c'
           Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/Laupetin/OpenAssetTools/main/thirdparty/lzx/lzx.h' -OutFile 'src\lzx.h'
           Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/nothings/stb/master/stb_image_write.h' -OutFile 'src\stb_image_write.h'
